@@ -1,15 +1,14 @@
-import AccountDAO, { AccountDAODatabase } from "./AccountDAO";
+import pgPromise, { IMain } from 'pg-promise';
+import { AccountDAODatabase } from "./AccountDAO";
 
 export default class GetAccount {
+  private readonly accountDAO: AccountDAODatabase;
 
-	constructor (readonly accountDAO: AccountDAO) {
-	}
+  constructor(private readonly pgp: IMain<{}, any>) {
+    this.accountDAO = AccountDAODatabase.getInstance(this.pgp);
+  }
 
-	async execute (accountId: string) {
-		const accountDAO = new AccountDAODatabase();
-		const account = await accountDAO.getById(accountId);
-		// account.is_passenger = account.isPassenger;
-		// account.is_driver = account.isDriver;
-		return account;
-	}
+  async execute(accountId: string) {
+    return this.accountDAO.getById(accountId);
+  }
 }

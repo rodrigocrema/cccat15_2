@@ -1,17 +1,19 @@
-import AccountDAO, { AccountDAODatabase, AccountDAOMemory } from "../src/AccountDAO";
-import GetAccount from "../src/GetAccount";
-import MailerGateway from "../src/MailerGateway";
-import Signup from "../src/Signup";
-import sinon from "sinon";
+import pgPromise, { IMain, IDatabase } from 'pg-promise';
+import GetAccount from '../src/GetAccount';
+import Signup from '../src/Signup';
+import { AccountDAODatabase } from '../src/AccountDAO';
+import sinon from 'sinon';
+import MailerGateway from '../src/MailerGateway';
+// Inicializando pgPromise
 
 let signup: Signup;
 let getAccount: GetAccount;
 
-// integration test com uma granularidade mais fina
 beforeEach(() => {
-	const accountDAO = new AccountDAODatabase();
-	signup = new Signup(accountDAO);
-	getAccount = new GetAccount(accountDAO);
+    const pgp: IMain = pgPromise();
+    const accountDAO = AccountDAODatabase.getInstance(pgp);
+    signup = new Signup(accountDAO, pgp);
+    getAccount = new GetAccount(pgp);
 });
 
 test("Deve criar a conta de um passageiro", async function () {
@@ -160,4 +162,9 @@ test("Deve criar a conta de um passageiro mock", async function () {
 	expect(outputGetAccount.cpf).toBe(input.cpf);
 	mailerGatewayMock.verify();
 	mailerGatewayMock.restore();
+});
+
+// Limpar stubs e spies do Sinon após cada teste
+afterEach(() => {
+    sinon.restore();
 });

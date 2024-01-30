@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: node-app
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - cccat15
+    command: ["./wait-for-postgres.sh", "npm", "start"]
+
+  db:
+    container_name: postgres
+    image: postgres
+    ports:
+      - '5433:5432'
+    volumes:
+      - data:/data/db
+    environment:
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${PGDATABASE}
+    networks:
+      - cccat15
+
+volumes:
+  data: {}
+
+networks:
+  cccat15:
+    driver: bridge
