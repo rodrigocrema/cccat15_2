@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "ts-node src/main.ts"
+    "start": "ts-node src/app.ts"
   },
   "name": "ride",
   "version": "1.0.0",

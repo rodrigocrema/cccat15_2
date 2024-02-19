@@ -27,4 +27,4 @@ COPY init.sql /docker-entrypoint-initdb.d/
 EXPOSE 3000
 
 # Start the application
-CMD ["npx", "ts-node", "src/main.ts"]
+CMD ["npx", "ts-node", "src/.ts"]
